@@ -3,7 +3,7 @@ Plugins installed :-
 meteor add mizzao:bootstrap-3
 meteor add underscore
 meteor add iron:router
-
+meteor add sacha:spin //Spin package to create loading template
 
 
 
@@ -15,10 +15,21 @@ Plugins removed :-
 meteor remove autopublish
 
 
-Other helpful meteor commands
+Other helpful notes/commands
 ==============================
 1. meteor create :- Creates a barebone project with .meteor and html,css and js files
 2. meteor :- run the meteor app
 3. meteor reset :- Clear database when its in an inconsistent state
 4. meteor mongo :- Mongo shell with the app's current database preloaded into the 'db' variable
-5.meteor deploy <appname>.meteor.com :- Deploy the current app at http://<appname>.meteor.com
+5. meteor deploy <appname>.meteor.com :- Deploy the current app at http://<appname>.meteor.
+6. {{> yield}} : Yield a template . This is iron router template helper 
+7. Router.configure({
+	layoutTemplate : 'layout',    //This is the basic layout. This remains the same and route templates replace
+	                              //the {{> yield}}
+	loadingTemplate : 'loading', //This is the place where you specify the loading template. Iron router
+								 //displays this template when you wait on some data
+	waitOn : function(){         //Function that specifies the data for which the iron router has to wait for
+		return Meteor.subscribe('posts');
+	}
+});
+The posts data will be fetched once when the user accesses the app for the first time. After that it is available readily
