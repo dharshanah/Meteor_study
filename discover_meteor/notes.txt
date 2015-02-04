@@ -4,7 +4,8 @@ meteor add mizzao:bootstrap-3
 meteor add underscore
 meteor add iron:router
 meteor add sacha:spin //Spin package to create loading template
-
+meteor add ian:accounts-ui-bootstrap-3  //Accounts with bootstrap styling
+meteor add accounts-password
 
 
 
@@ -34,3 +35,5 @@ Other helpful notes/commands
 	notFoundTemplate : 'notFound' //Route not Found common template
 });
 The posts data will be fetched once when the user accesses the app for the first time. After that it is available readily
+8. All user related data should be stored inside the Session or inside the url (common data for users).
+Whenever session data is changed, you can make is reactive by using Tracker.autorun which runs the reactive code automatically whenever there is a change in the data. Moreover this works like Hot Code Reload so users will never be disrupted as session and data will not be lost. Wrap the code that has to be reactive inside a Tracker.autorun function.
