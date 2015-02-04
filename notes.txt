@@ -1,0 +1,24 @@
+Plugins installed :-
+====================
+meteor add mizzao:bootstrap-3
+meteor add underscore
+meteor add iron:router
+
+
+
+
+
+
+Plugins removed :-
+==================
+//Remove autopublish and add publish/subscribe manually
+meteor remove autopublish
+
+
+Other helpful meteor commands
+==============================
+1. meteor create :- Creates a barebone project with .meteor and html,css and js files
+2. meteor :- run the meteor app
+3. meteor reset :- Clear database when its in an inconsistent state
+4. meteor mongo :- Mongo shell with the app's current database preloaded into the 'db' variable
+5.meteor deploy <appname>.meteor.com :- Deploy the current app at http://<appname>.meteor.com
