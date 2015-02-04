@@ -31,5 +31,6 @@ Other helpful notes/commands
 	waitOn : function(){         //Function that specifies the data for which the iron router has to wait for
 		return Meteor.subscribe('posts');
 	}
+	notFoundTemplate : 'notFound' //Route not Found common template
 });
 The posts data will be fetched once when the user accesses the app for the first time. After that it is available readily
