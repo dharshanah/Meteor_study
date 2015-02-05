@@ -6,7 +6,10 @@ meteor add iron:router
 meteor add sacha:spin //Spin package to create loading template
 meteor add ian:accounts-ui-bootstrap-3  //Accounts with bootstrap styling
 meteor add accounts-password
-
+//The foll package can be used to check if the attributes are of the required type Eg: check(attr ,attrtype)
+// i.e check(Meteor.checkId(), String)
+//Official desc : Detects inadequate input sanitization
+meteor add audit-argument-checks
 
 
 
@@ -71,3 +74,26 @@ spacebar provided by accounts package . This is equivalent to Metoer.user() chec
     Eg : {{#if currentUser}} 
     		<<<<<Here is the html element that you have to hide if user is not logged in >>>>>
     	 {{/if}}
+
+*** Meteor.methods() are the server side methods that can be called from the client side by
+calling Meteor.call (methodName , arguments , callbackFunction)
+The collection-hooks package can be used to create hooks for before , after insert or db operations in the Meteor.methods call. i.e Posts.insert can be used with Posts.before.insert when used with collection-hooks package .
+
+*** How does the Meteor.methods() in server and Meteor.call() in client work.
+Typically if it works in the normal client-server way , this is how it would look
+                                    =================
+click --> client (Method.call()) --> server(Method.method exec) --> Returns results to client and GUI updates
+  0ms -->         0ms            -->         +200 ms             -->             +500 ms
+  --------------Normal call w/o Meteor's Latency Compensation------------------------->
+
+  Meteor Way
+  ===========
+  click --> client(Method.call()) --> client simuates action of Method call and updates GUI --> 
+    0ms -->       0ms             -->     0ms (At this point UI reflects simulated changes) -->
+  server(Method.method exec) --> Returns results to client.Client replaces simulated results with server results
+    200ms                    -->                           500ms (Replaced with real changes)
+---------------------Latency Compensation way ------------------------------------------------->
+
+This latency compensation can be observed by calling the Meteor._sleepForMs() method in the server side and then
+executing the . Since the posts.js is in collections both server and client execute them. So we add the delay in the client side by checking for Meteor.isServer . The method stimulation run by the client is called stub()
+ 
