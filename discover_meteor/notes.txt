@@ -14,17 +14,25 @@ Plugins removed :-
 ==================
 //Remove autopublish and add publish/subscribe manually
 meteor remove autopublish
+//Remove insecure package to add data security
+meteor remove insecure
 
 
 Other helpful notes/commands
 ==============================
-1. meteor create :- Creates a barebone project with .meteor and html,css and js files
-2. meteor :- run the meteor app
-3. meteor reset :- Clear database when its in an inconsistent state
-4. meteor mongo :- Mongo shell with the app's current database preloaded into the 'db' variable
-5. meteor deploy <appname>.meteor.com :- Deploy the current app at http://<appname>.meteor.
-6. {{> yield}} : Yield a template . This is iron router template helper 
-7. Router.configure({
+*** meteor create :- Creates a barebone project with .meteor and html,css and js files
+
+*** meteor :- run the meteor app
+
+*** meteor reset :- Clear database when its in an inconsistent state
+
+*** meteor mongo :- Mongo shell with the app's current database preloaded into the 'db' variable
+
+*** meteor deploy <appname>.meteor.com :- Deploy the current app at http://<appname>.meteor.
+
+*** {{> yield}} : Yield a template . This is iron router template helper 
+
+*** Router.configure({
 	layoutTemplate : 'layout',    //This is the basic layout. This remains the same and route templates replace
 	                              //the {{> yield}}
 	loadingTemplate : 'loading', //This is the place where you specify the loading template. Iron router
@@ -35,5 +43,31 @@ Other helpful notes/commands
 	notFoundTemplate : 'notFound' //Route not Found common template
 });
 The posts data will be fetched once when the user accesses the app for the first time. After that it is available readily
-8. All user related data should be stored inside the Session or inside the url (common data for users).
-Whenever session data is changed, you can make is reactive by using Tracker.autorun which runs the reactive code automatically whenever there is a change in the data. Moreover this works like Hot Code Reload so users will never be disrupted as session and data will not be lost. Wrap the code that has to be reactive inside a Tracker.autorun function.
+
+*** Meteor is a reactive , realtime framework. It ensures this by implicitly calling observe() on the cursor of 
+collections and taking care of the added , removed and changed methods for the developer. But in some cases
+we might have to call the observe explicitly when we deal with third party widgets.
+
+*** Also the whole application is not rerun whenever there is a change . Only the portions of the code that depends on reactive data sources are rerun everytime there is a change. These portions are called computations. Whenever a reactive data source changes, it calls the invalidate() function on the computation 
+	Meteor.startup(function() {
+		Tracker.autorun(function() {
+			console.log('There are ' + Posts.find().count() + ' posts');
+		});
+	});
+Whenever invalidate is called, computation reevaluate their contents.
+
+*** All user related data should be stored inside the Session or inside the url (common data for users).
+Whenever session data is changed, you can make is reactive by using Tracker.autorun which runs the reactive code automatically whenever there is a change in the data. Moreover this works like Hot Code Reload so users will never be disrupted as session and data will not be lost. Wrap the code that has to be reactive inside a Tracker.autorun function.This should be wrapped inside a Meteor.startup() function . This makes sure that it only runs once Metor has finished loading the data required. This implicitly creates a computation at the backend 
+
+*** Once the insecure package is removed, You can allow insertions from client side by specifying 
+Posts.allow({ 
+	insert: function(userId , doc){
+		return !! userId
+}})
+The above code makes sure Post insert is only allowed if there is a valid user logged in
+
+*** To hide / show an element in html depending on if the user is not logged in or not , you can use the currentuser
+spacebar provided by accounts package . This is equivalent to Metoer.user() check from server side
+    Eg : {{#if currentUser}} 
+    		<<<<<Here is the html element that you have to hide if user is not logged in >>>>>
+    	 {{/if}}
