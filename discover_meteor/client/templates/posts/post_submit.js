@@ -12,11 +12,7 @@ Template.postSubmit.events ({
 			if(response.postExists){
 				alert('Url already exist. Redirecting')
 			}
-			//Commented for the sake of demonstrating Latency Compensation
-			//Router.go('postPage',{_id : response._id});
+			Router.go('postPage',{_id : response._id});
 		});
-		//Temp Route
-		Router.go('postsList');
-		
 	}
 })

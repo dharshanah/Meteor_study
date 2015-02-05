@@ -35,6 +35,8 @@ Other helpful notes/commands
 
 *** {{> yield}} : Yield a template . This is iron router template helper 
 
+***  Iron router methods :- Router.configure ,Router.route , Router.onBeforeAction, Router.go
+
 *** Router.configure({
 	layoutTemplate : 'layout',    //This is the basic layout. This remains the same and route templates replace
 	                              //the {{> yield}}
@@ -97,3 +99,6 @@ click --> client (Method.call()) --> server(Method.method exec) --> Returns resu
 This latency compensation can be observed by calling the Meteor._sleepForMs() method in the server side and then
 executing the . Since the posts.js is in collections both server and client execute them. So we add the delay in the client side by checking for Meteor.isServer . The method stimulation run by the client is called stub()
  
+ *** Allow /Deny and Meteor.methods - Allow / Deny can be used in case very simple manipulation is ony needed
+ on the collection. For any other server related information to be inserted /updated in the collection , use meteor.methods
+ There can be ultiple allow/deny for a single operation. Order of access checks :- First all deny checks are done and even if one of them is true ,operation is denied. If all of them are false , then allow methods are checked and even if one of them is true , then operation is allowed.

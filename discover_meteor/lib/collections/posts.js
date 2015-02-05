@@ -1,13 +1,21 @@
 Posts = new Mongo.Collection('posts');
 
-/** This becomes irrelevant once we start using Meteor.methods
+//This becomes irrelevant  for insert because we have used a Method for it usimg Meteor.methods 
 Posts.allow({
-	insert : function(userId , doc){
-		return !! userId;
-	}
-	
+	update : function(userId , doc){
+		return ownsDocument(userId, doc);
+	},
+	remove : function(userId , doc){
+      return ownsDocument(userId, doc);
+   },
 });
-**/
+
+Posts.deny({
+   update : function(userId , doc, fieldNames){
+      return (_.without(fieldNames,'url','title').length>0);
+   }
+});
+
 
 Meteor.methods({
    postInsert : function(postAttributes){
@@ -16,14 +24,6 @@ Meteor.methods({
    			title : String,
    			url : String
    		});
-   		//This code check is to understand Latency Compensation
-   		if(Meteor.isServer){
-   			postAttributes.title += "(server)";
-   			Meteor._sleepForMs(5000);
-
-   		} else {
-   			postAttributes.title += "(client)";
-   		}
    		var postWithSameUrl = Posts.findOne({url: postAttributes.url});
    		if(postWithSameUrl){
    			return {
@@ -34,7 +34,7 @@ Meteor.methods({
    		var user = Meteor.user();
    		var post = _.extend(postAttributes ,{
    			userId : user._id,
-   			author : user.name,
+   			author : user.username,
    			submitted : new Date()
    		});
 
