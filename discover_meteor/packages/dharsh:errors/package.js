@@ -7,7 +7,7 @@ Package.describe({
   git: '',
   // By default, Meteor will default to using README.md for documentation.
   // To avoid submitting documentation, set this field to null.
-  documentation: 'README.md'
+  documentation: null
 });
 
 Package.onUse(function(api,where) {
@@ -18,10 +18,8 @@ Package.onUse(function(api,where) {
     api.export('Errors');
 });
 
-
-
-/*Package.onTest(function(api) {
-  api.use('tinytest');
-  api.use('dharsh:errors');
-  api.addFiles('dharsh:errors-tests.js');
-});*/
+Package.onTest(function(api) {
+  api.use('dharsh:errors', 'client');
+  api.use(['tinytest', 'test-helpers'], 'client');
+  api.addFiles('errors_tests.js', 'client');
+});
