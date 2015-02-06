@@ -33,6 +33,11 @@ Other helpful notes/commands
 
 *** meteor deploy <appname>.meteor.com :- Deploy the current app at http://<appname>.meteor.
 
+*** meteor create --package dharsh:erros :- Create custom package
+
+*** meteor publish --create :- Publish the created package to atmosphere. You should do this inside the
+                               package dir/your package
+
 *** {{> yield}} : Yield a template . This is iron router template helper 
 
 ***  Iron router methods :- Router.configure ,Router.route , Router.onBeforeAction, Router.go
