@@ -102,3 +102,7 @@ executing the . Since the posts.js is in collections both server and client exec
  *** Allow /Deny and Meteor.methods - Allow / Deny can be used in case very simple manipulation is ony needed
  on the collection. For any other server related information to be inserted /updated in the collection , use meteor.methods
  There can be ultiple allow/deny for a single operation. Order of access checks :- First all deny checks are done and even if one of them is true ,operation is denied. If all of them are false , then allow methods are checked and even if one of them is true , then operation is allowed.
+
+*** Errors should not be dealt only with alerts. And since they are only valid for the current session ,
+they can be stored in "Local Collections" What this means is that this collection will only be present in the client side and will not be synced with the server.  You can create a local client-only collection by creating a collection within the client directory. Eg: Inside client helpers you can create a collection as follows :
+Error = new Mongo.Collection(null);  
