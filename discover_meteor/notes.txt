@@ -122,4 +122,13 @@ Add this package reactive-var . So for eg :
  var currentCount = new ReactiveVar(); 
  And then you can set the value of this variable as this : currentCount.set(someValue) . This internally finds all the dependency() code and executes the <listeners>.changed(() method . They then invalidate the computation and then either rerun or do whatever they are supposed to do .
 
-*** Routes are parsed successively in the order in which they are written in the code. So it is better to use specific paths first (eg : /post/:id) and add vague routes towards the bottom (/:postsLimit? . This is vague because :postsLimit? can match any parameter. So this should be put below all the other routes)
+*** Routes are parsed successively in the order in which they are written in the code. So it is better to use specific paths first (eg : /post/:id) and add vague routes towards the bottom (/:postsLimit? . This is vague because :postsLimit? can match any parameter. So this should be put below all the other routes)  The posts can be filtered and published in this manner 
+	Meteor.publish('posts',function(options){
+		return Posts.find({},options);
+	});
+
+*** To make sure that we reuse code among routes , we can add a RouteController
+PostsListController = RouteController.extend({
+	template : <<templateName>>,
+	.............
+})

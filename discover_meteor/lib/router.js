@@ -47,18 +47,33 @@ PostsListController = RouteController.extend({
 		return parseInt(this.params.postsLimit) || this.increment;
 	},
 	findOptions : function(){
-		return {sort :{submitted : -1} , limit : this.postsLimit};
-	},
-	waitOn : function(){
-		return Meteor.subscribe('posts' , this.findOptions);
-	},
-	data : function(){
-		return {posts: Posts.find({}, this.findOptions())};
+		return {sort :{submitted : -1} , limit : this.postsLimit()};
+			},
+			waitOn : function(){
+				return Meteor.subscribe('posts' , this.findOptions());
+			},
+			posts: function() {
+				return Posts.find({}, this.findOptions());
+			},
+			data: function() {
+				//Here this.posts().count() refers to the number of posts in the current cursor
+				//that is retrieved based on the findOptions. this.posts().coun)t() does not
+		//refer to the entire post count in dB rather the data context that is obtained by the
+		//data function . So in this case we check if we have asked for n posts and we have got
+		// n posts . Then this mean there are more posts . If we ask for n and we have got <n ,
+		//then that means no more posts. This fails only in one condition where there are exactly 
+		//n posts
+		var hasMore = this.posts().count() === this.postsLimit();
+		var nextPath = this.route.path({postsLimit: this.postsLimit() + this.increment});
+		return {
+			posts: this.posts(),
+			nextPath: hasMore ? nextPath : null
+		};	
 	}
 });
 
 Router.route('/:postsLimit?', {
-	name : 'postsList',
+	name : 'postsList'
 });
 //The following statement tells the router to show the notFound 404 for postPage template
 //in case there is no post with the _id param value in url. That is if the data function returns falsy
