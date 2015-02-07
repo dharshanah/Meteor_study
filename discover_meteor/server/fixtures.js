@@ -15,15 +15,16 @@ var telescopeId = Posts.insert({
 	userId: sacha._id,
 	author: sacha.profile.name,
 	url: 'http://sachagreif.com/introducing-telescope/',
-	submitted: new Date(now - 7 * 3600 * 1000)
+	submitted: new Date(now - 7 * 3600 * 1000),
+	commentsCount: 2
 });
 Comments.insert({
 	postId: telescopeId,
 	userId: tom._id,
-	author: tom.profile.name,
-	submitted: new Date(now - 5 * 3600 * 1000),
+	author: tom.profile.name,submitted: new Date(now - 5 * 3600 * 1000),
 	body: 'Interesting project Sacha, can I get involved?'
-});Comments.insert({
+});
+Comments.insert({
 	postId: telescopeId,
 	userId: sacha._id,
 	author: sacha.profile.name,
@@ -32,16 +33,18 @@ Comments.insert({
 });
 Posts.insert({
 	title: 'Meteor',
-	userId: tom._id,
+	userId: tom._id,	
 	author: tom.profile.name,
 	url: 'http://meteor.com',
-	submitted: new Date(now - 10 * 3600 * 1000)
+	submitted: new Date(now - 10 * 3600 * 1000),
+	commentsCount: 0
 });
 Posts.insert({
 	title: 'The Meteor Book',
 	userId: tom._id,
 	author: tom.profile.name,
 	url: 'http://themeteorbook.com',
-	submitted: new Date(now - 12 * 3600 * 1000)
+	submitted: new Date(now - 12 * 3600 * 1000),
+	commentsCount: 0
 });
 }
