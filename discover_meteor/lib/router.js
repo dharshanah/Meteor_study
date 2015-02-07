@@ -40,18 +40,25 @@ var requireLogin = function(){
 }
 Router.route('/submit' , {name : 'postSubmit'});
 
-Router.route('/:postsLimit?', {
-	name : 'postsList',
+PostsListController = RouteController.extend({
+	template : 'postsList',
+	increment : 5,
+	postsLimit : function(){
+		return parseInt(this.params.postsLimit) || this.increment;
+	},
+	findOptions : function(){
+		return {sort :{submitted : -1} , limit : this.postsLimit};
+	},
 	waitOn : function(){
-		var limit = parseInt(this.params.postsLimit) || 5;
-		return Meteor.subscribe('posts', {sort : {submitted : -1} , limit : limit});
+		return Meteor.subscribe('posts' , this.findOptions);
 	},
 	data : function(){
-		var limit = parseInt(this.params.postsLimit) || 5;
-		return {
-			posts : Posts.find({}, {sort: {submitted : -1} , limit : limit})
-		}
+		return Posts.find({},this.findOptions);
 	}
+});
+
+Router.route('/:postsLimit?', {
+	name : 'postsList',
 });
 //The following statement tells the router to show the notFound 404 for postPage template
 //in case there is no post with the _id param value in url. That is if the data function returns falsy
