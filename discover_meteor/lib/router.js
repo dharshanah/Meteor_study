@@ -6,11 +6,10 @@ Router.configure({
 	layoutTemplate : 'layout',
 	loadingTemplate : 'loading',
 	waitOn : function(){
-		return [Meteor.subscribe('posts'),Meteor.subscribe('notifications')];
+		return [Meteor.subscribe('notifications')];
 	},
 	notFoundTemplate : 'notFound'
 });
-Router.route('/', {name : 'postsList'});
 Router.route('/posts/:_id',{
 	name : 'postPage',
 	waitOn : function(){
@@ -40,6 +39,20 @@ var requireLogin = function(){
 	}
 }
 Router.route('/submit' , {name : 'postSubmit'});
+
+Router.route('/:postsLimit?', {
+	name : 'postsList',
+	waitOn : function(){
+		var limit = parseInt(this.params.postsLimit) || 5;
+		return Meteor.subscribe('posts', {sort : {submitted : -1} , limit : limit});
+	},
+	data : function(){
+		var limit = parseInt(this.params.postsLimit) || 5;
+		return {
+			posts : Posts.find({}, {sort: {submitted : -1} , limit : limit})
+		}
+	}
+});
 //The following statement tells the router to show the notFound 404 for postPage template
 //in case there is no post with the _id param value in url. That is if the data function returns falsy
 //('null' or 'false' or 'undefined' or empty) object.

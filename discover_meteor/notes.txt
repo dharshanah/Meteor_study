@@ -10,6 +10,9 @@ meteor add accounts-password
 // i.e check(Meteor.checkId(), String)
 //Official desc : Detects inadequate input sanitization
 meteor add audit-argument-checks
+//The below package can be added to add reactiveness to a variable for e: a variable that gets changed 
+//after using a third party API. So to add reactiveness to this varaible add this package
+meteor add reactive-var
 
 
 
@@ -113,3 +116,10 @@ they can be stored in "Local Collections" What this means is that this collectio
 Error = new Mongo.Collection(null);  
 
 *** Denormalizing the data is far better than loading all data just because we need to show it to the user. For example , Comments for a post need not be loaded all the time(i.e need not be subscibed by the router) Only when the post Detail page is shown , you have to load the comments data. (i.e only the specfic route should subscribe for that data ) But what this would mean is that , the data related to the number of comments on a post and other such details would not be available for other routes such as list post page etc. So solution for this is to make the data denormalized . In this case , the data related to commentsCount can be added as a column to the posts page . This extra code complexity would be nothing compared to the huge performance benefit that we get because of loading comments data only when it is needed.
+
+*** Creating a Reactive variable
+Add this package reactive-var . So for eg :
+ var currentCount = new ReactiveVar(); 
+ And then you can set the value of this variable as this : currentCount.set(someValue) . This internally finds all the dependency() code and executes the <listeners>.changed(() method . They then invalidate the computation and then either rerun or do whatever they are supposed to do .
+
+*** Routes are parsed successively in the order in which they are written in the code. So it is better to use specific paths first (eg : /post/:id) and add vague routes towards the bottom (/:postsLimit? . This is vague because :postsLimit? can match any parameter. So this should be put below all the other routes)
