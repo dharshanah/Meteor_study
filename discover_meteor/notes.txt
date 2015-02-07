@@ -132,3 +132,8 @@ PostsListController = RouteController.extend({
 	template : <<templateName>>,
 	.............
 })
+
+*** {{#unless <something>}} do something .. {{unless}} .. This is something like a while loop which
+loops until the <something> condition to be true.
+
+*** Multiple publications can be made for a single collection :D

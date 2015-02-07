@@ -13,7 +13,10 @@ Router.configure({
 Router.route('/posts/:_id',{
 	name : 'postPage',
 	waitOn : function(){
-		return Meteor.subscribe('comments',this.params._id);
+		return [
+		Meteor.subscribe('singlePost', this.params._id),
+		Meteor.subscribe('comments',this.params._id)
+		];
 	},
 	data : function(){
 		return Posts.findOne(this.params._id);
@@ -48,16 +51,24 @@ PostsListController = RouteController.extend({
 	},
 	findOptions : function(){
 		return {sort :{submitted : -1} , limit : this.postsLimit()};
-			},
-			waitOn : function(){
-				return Meteor.subscribe('posts' , this.findOptions());
-			},
-			posts: function() {
-				return Posts.find({}, this.findOptions());
-			},
-			data: function() {
-				//Here this.posts().count() refers to the number of posts in the current cursor
-				//that is retrieved based on the findOptions. this.posts().coun)t() does not
+	},
+	//WaitOn is commented out because each time data is loaded , it goes to the loading template
+	//and then user has to scroll all the way back again . So we are just going to use
+	//a subscriptions hook which will not return the posts but will just fetch them
+	// And then we use a ready on these subsciptions to make sure that we get notified once the 
+	//data is ready. Till then the spinner is loaded
+	/*waitOn : function(){
+		return Meteor.subscribe('posts' , this.findOptions());
+	},*/
+	subscriptions: function(){
+		this.postsSub = Meteor.subscribe('posts' , this.findOptions());
+	},
+	posts: function() {
+		return Posts.find({}, this.findOptions());
+	},
+	data: function() {
+		//Here this.posts().count() refers to the number of posts in the current cursor
+		//that is retrieved based on the findOptions. this.posts().count() does not
 		//refer to the entire post count in dB rather the data context that is obtained by the
 		//data function . So in this case we check if we have asked for n posts and we have got
 		// n posts . Then this mean there are more posts . If we ask for n and we have got <n ,
@@ -67,6 +78,7 @@ PostsListController = RouteController.extend({
 		var nextPath = this.route.path({postsLimit: this.postsLimit() + this.increment});
 		return {
 			posts: this.posts(),
+			ready : this.postsSub.ready(),
 			nextPath: hasMore ? nextPath : null
 		};	
 	}
